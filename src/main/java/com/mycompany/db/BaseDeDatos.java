@@ -1,7 +1,7 @@
 package com.mycompany.db;
 
+import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +14,10 @@ public class BaseDeDatos {
 
     public BaseDeDatos() {
         conexion = Conexion.getConnection();
+    }
+
+    public void registrarUsuario(Registro registro) {
+
     }
 
 }
