@@ -1,23 +1,10 @@
 package com.mycompany.db;
-
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-public class BaseDeDatos {
-    private Connection conexion;
-
-    public BaseDeDatos() {
-        conexion = Conexion.getConnection();
-    }
-
-    public void registrarUsuario(Registro registro) {
-
-    }
-
+public abstract class BaseDeDatos {
+    public abstract int registrarUsuario(Registro registro);
+    public abstract Usuario obtenerUsuarioPorCorreo(String correo);
+    public abstract int actualizarIntentos(String correo, int num_intentos);
+    public abstract int actualizarActivo(Usuario usuario);
+    public abstract boolean bloquearUsuario(Usuario usuario);
 }
