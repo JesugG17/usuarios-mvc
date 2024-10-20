@@ -35,14 +35,19 @@ public class Controlador implements ActionListener, WindowListener {
       return;
     }
     if (e.getSource() == vista.getBtnRegistrarUsuario()) {
-      if (modelo.registrarUsuario(vista.getRegistro())) {
-        vista.mostarMensaje("Usuario Registrado Correctamente");
-        vista.mostrarRegistro(false);
+      Response response = modelo.registrarUsuario(vista.getRegistro());
+
+      if (!response.isValid()) {
+        vista.mostarMensaje(response.getMessage());
         return;
       }
-      vista.mostarMensaje("Algo fallo al registrar usuario");
+      
+      vista.mostarMensaje(response.getMessage());
+      vista.mostrarRegistro(false);
+      vista.limpiarRegistro();
       return;
     }
+
     if (e.getSource() == vista.getBtnCerrarSeccion()) {
       modelo.cerrarSeccion();
       vista.mostrarPrincipal(false);

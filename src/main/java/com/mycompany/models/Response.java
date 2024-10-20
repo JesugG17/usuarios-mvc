@@ -9,6 +9,10 @@ public class Response {
     this.message = message;
   }
 
+  public Response(boolean isValid) {
+    this(isValid, "");
+  }
+
   public boolean isValid() {
     return this.isValid;
   }

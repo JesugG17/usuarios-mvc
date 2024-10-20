@@ -129,6 +129,13 @@ public class Vista extends JFrame {
     modalRegistarUsuario.setVisible(mostrar);
   }
 
+  public void limpiarRegistro() {
+    txtNombreRegistro.setText("");
+    txtCorreoRegistro.setText("");
+    txtPasswordRegistro1.setText("");
+    txtPasswordRegistro2.setText("");
+  }
+
   public void mostrarPrincipal(boolean mostrar) {// muestra o oculta el panel principal
     setVisible(!mostrar);
     modalPanelPrincipal.setVisible(mostrar);

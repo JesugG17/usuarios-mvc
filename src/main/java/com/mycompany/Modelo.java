@@ -26,6 +26,7 @@ public class Modelo {
     }
 
     if (usuarioBD.getNum_intentos() >= 3) {
+      bd.actualizarFechaBloqueo(usuario.getCorreo());
       return new Response(false, "Numero de intentos maximo alcanzado, se ha bloqueado su cuenta por 30m");
     }
 
@@ -34,45 +35,45 @@ public class Modelo {
       return new Response(false, "Contrase o usuario incorrecto");
     }
 
-
+    bd.actualizarActivo(usuario.getCorreo());
     return new Response(true, "Inicio de sesión exitoso");
   }
 
-  public boolean registrarUsuario(Registro registro) {
-    if (!validaciones(registro))
-      return false;
+  public Response registrarUsuario(Registro registro) {
+    Response validaciones = validaciones(registro);
+    if (!validaciones.isValid())
+      return validaciones;
 
     Usuario usuarioBd = bd.obtenerUsuarioPorCorreo(registro.getCorreo());
 
     if (usuarioBd != null) {
-      System.out.println("Este usuario ya existe");
-      return false;
+      return new Response(false, "Este usuario ya existe");
     }
 
     registro.setPassword1(Encrypter.hashPassword(registro.getPassword1()));
     bd.registrarUsuario(registro);
-    return true;
+    return new Response(true, "Usuario registrado exitosamente");
   }
 
-  private boolean validaciones(Registro registro) {
+  private Response validaciones(Registro registro) {
     if (!registro
         .getCorreo()
         .matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
       System.out.println("Correo no valido");
-      return false;
+      return new Response(false, "Correo no valido");
     }
 
     if (!registro.getPassword1().equals(registro.getPassword2())) {
       System.out.println("Contraseñas no coinciden");
-      return false;
+      return new Response(false, "Las contraseñas no coinciden");
     }
 
     if (!registro.getPassword1().matches("^\\d{4}$")) {
       System.out.println(
           "Contraseña no valida, solo numeros de 4 digitos");
-      return false;
+      return new Response(false, "Contraseña no valida, solo numeros de 4 digitos");
     }
-    return true;
+    return new Response(true);
   }
 
   public void cerrarSeccion() {
