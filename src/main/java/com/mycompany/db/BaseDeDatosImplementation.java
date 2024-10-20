@@ -60,23 +60,40 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
         String sql =
             "UPDATE usuarios SET num_intentos = num_intentos + 1 WHERE correo = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(2, correo);
+            ps.setString(1, correo);
             resultado = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(resultado);
         return resultado;
     }
 
     @Override
-    public int actualizarActivo(Usuario usuario){
-        return 0;
+    public int actualizarActivo(String correo){
+        int resultado = 0;
+        String sql =
+            "UPDATE usuarios SET activo = NOT activo WHERE correo = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            resultado = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultado;
     }
 
     @Override
-    public boolean bloquearUsuario(Usuario usuario){
-        return false;
+    public int actualizarFechaBloqueo(String correo){
+        int resultado = 0;
+        String sql =
+            "UPDATE usuarios SET fecha_bloqueado = CURRENT_TIMESTAMP WHERE correo = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            resultado = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultado;
     }
 
 }

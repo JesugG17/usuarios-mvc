@@ -22,7 +22,6 @@ public class Controlador implements ActionListener, WindowListener {
         if (e.getSource() == vista.getBtnIngresar()) {
             modelo.validarIngreso(vista.getUsuario());
             vista.mostrarPrincipal(true);
-            db.actualizarIntentos("citlaly_ame@hotmail.com");
             return;
         }
         if (e.getSource() == vista.getBtnRegistrar()) {
