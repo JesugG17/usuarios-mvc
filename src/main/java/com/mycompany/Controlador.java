@@ -1,10 +1,10 @@
 package com.mycompany;
+
+import com.mycompany.db.BaseDeDatosImplementation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
-import com.mycompany.db.BaseDeDatosImplementation;
 
 public class Controlador implements ActionListener, WindowListener {
 
@@ -22,7 +22,6 @@ public class Controlador implements ActionListener, WindowListener {
         if (e.getSource() == vista.getBtnIngresar()) {
             modelo.validarIngreso(vista.getUsuario());
             vista.mostrarPrincipal(true);
-            db.actualizarIntentos("citlaly_ame@hotmail.com");
             return;
         }
         if (e.getSource() == vista.getBtnRegistrar()) {
@@ -30,7 +29,7 @@ public class Controlador implements ActionListener, WindowListener {
             return;
         }
         if (e.getSource() == vista.getBtnRegistrarUsuario()) {
-            if(modelo.registrarUsuario(vista.getRegistro())){
+            if (modelo.registrarUsuario(vista.getRegistro())) {
                 vista.mostarMensaje("Usuario Registrado Correctamente");
                 vista.mostrarRegistro(false);
                 return;
@@ -47,36 +46,24 @@ public class Controlador implements ActionListener, WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        vista.setVisible(true);//al cerrar el panel de registro o  principal vuelve a mostrar el inicio de seccion
+        vista.setVisible(true); //al cerrar el panel de registro o  principal vuelve a mostrar el inicio de seccion
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
+    public void windowClosed(WindowEvent e) {}
 
     @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
+    public void windowIconified(WindowEvent e) {}
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
+    public void windowDeiconified(WindowEvent e) {}
 
     @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
+    public void windowActivated(WindowEvent e) {}
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
+    public void windowDeactivated(WindowEvent e) {}
 
     @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
+    public void windowOpened(WindowEvent e) {}
 }
