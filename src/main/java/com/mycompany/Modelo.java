@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.PasswordEncryption;
 import com.mycompany.db.BaseDeDatosImplementation;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
@@ -13,22 +14,31 @@ public class Modelo {
     }
 
     public void validarIngreso(Usuario usuario) {
-        if (
-            !PasswordEncryption.isPasswordMatch(
-                usuario.getNip(),
-                bd.obtenerUsuarioPorCorreo(usuario.getCorreo()).getNip()
-            ) ||
-            (!bd
-                    .obtenerUsuarioPorCorreo(usuario.getCorreo())
-                    .getCorreo()
-                    .equals(usuario.getCorreo()))
-        ) {
-            System.out.println("Contraseña incorrecta o usuario incorrecto");
-            // actualizar intentos fallidos incrementar
+        Usuario usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
+
+        if (usuarioBD == null) {
+            System.out.println("Usuario no existe");
             return;
         }
 
-        System.out.println("Bienvenido " + usuario.getCorreo());
+        if (usuarioBD.isActivo()) {
+            return;
+        }
+
+        if (
+            !PasswordEncryption.isPasswordMatch(
+                usuario.getNip(),
+                usuarioBD.getNip()
+            )
+        ) {
+            System.out.println("Contraseña incorrecta o usuario incorrecto");
+            bd.actualizarIntentos(usuario.getCorreo());
+        }
+
+        if (usuarioBD.getNum_intentos() == 3) {
+            System.out.println("Usuario bloqueado");
+            return;
+        }
     }
 
     public boolean registrarUsuario(Registro registro) {
