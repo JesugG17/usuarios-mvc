@@ -1,14 +1,12 @@
 package com.mycompany;
 
-import com.mycompany.PasswordEncryption;
-import com.mycompany.db.BaseDeDatos;
 import com.mycompany.db.BaseDeDatosImplementation;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
 
 public class Modelo {
 
-    private BaseDeDatos bd;
+    private BaseDeDatosImplementation bd;
 
     public Modelo(BaseDeDatosImplementation bd) {
         this.bd = bd;
@@ -18,10 +16,10 @@ public class Modelo {
         if (
             !PasswordEncryption.isPasswordMatch(
                 usuario.getNip(),
-                bd.obternerUsuarioPorCorreo(usuario).getNip()
+                bd.obtenerUsuarioPorCorreo(usuario.getCorreo()).getNip()
             ) ||
             (!bd
-                    .obternerUsuarioPorCorreo(usuario)
+                    .obtenerUsuarioPorCorreo(usuario.getCorreo())
                     .getCorreo()
                     .equals(usuario.getCorreo()))
         ) {

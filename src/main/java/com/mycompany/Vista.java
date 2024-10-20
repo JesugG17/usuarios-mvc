@@ -1,8 +1,16 @@
 package com.mycompany;
-import javax.swing.*;
-import com.mycompany.entities.Usuario;
-import com.mycompany.entities.Registro;
 import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import com.mycompany.entities.Registro;
+import com.mycompany.entities.Usuario;
 
 public class Vista extends JFrame {
     private JTextField txtCorreoLogin,txtNombreRegistro,txtCorreoRegistro;
