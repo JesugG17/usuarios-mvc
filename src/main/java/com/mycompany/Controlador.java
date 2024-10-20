@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import com.mycompany.models.Response;
+
 public class Controlador implements ActionListener, WindowListener {
 
   private Vista vista;
@@ -18,7 +20,13 @@ public class Controlador implements ActionListener, WindowListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == vista.getBtnIngresar()) {
-      modelo.validarIngreso(vista.getUsuario());
+      Response response = modelo.validarIngreso(vista.getUsuario());
+
+      if (!response.isValid()){ 
+        vista.mostarMensaje(response.getMessage());
+        return;
+      }
+
       vista.mostrarPrincipal(true);
       return;
     }

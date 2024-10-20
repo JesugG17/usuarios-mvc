@@ -3,6 +3,8 @@ package com.mycompany;
 import com.mycompany.db.BaseDeDatos;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
+import com.mycompany.models.Response;
+import com.mycompany.utils.Encrypter;
 
 public class Modelo {
 
@@ -12,36 +14,42 @@ public class Modelo {
     this.bd = bd;
   }
 
-  public void validarIngreso(Usuario usuario) {
+  public Response validarIngreso(Usuario usuario) {
     Usuario usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
 
     if (usuarioBD == null) {
-      System.out.println("Usuario no existe");
-      return;
+      return new Response(false, "El usuario no existe");
     }
 
     if (usuarioBD.isActivo()) {
-      return;
+      return new Response(false, "Ya hay una sesión activa");
     }
 
-    if (!PasswordEncryption.isPasswordMatch(
-        usuario.getNip(),
-        usuarioBD.getNip())) {
-      System.out.println("Contraseña incorrecta o usuario incorrecto");
+    if (usuarioBD.getNum_intentos() >= 3) {
+      return new Response(false, "Numero de intentos maximo alcanzado, se ha bloqueado su cuenta por 30m");
+    }
+
+    if (!Encrypter.matchPasswords(usuario.getNip(), usuarioBD.getNip())) {
       bd.actualizarIntentos(usuario.getCorreo());
+      return new Response(false, "Contrase o usuario incorrecto");
     }
 
-    if (usuarioBD.getNum_intentos() == 3) {
-      System.out.println("Usuario bloqueado");
-      return;
-    }
+
+    return new Response(true, "Inicio de sesión exitoso");
   }
 
   public boolean registrarUsuario(Registro registro) {
     if (!validaciones(registro))
       return false;
-    registro.setPassword1(
-        PasswordEncryption.encryptPassword(registro.getPassword1()));
+
+    Usuario usuarioBd = bd.obtenerUsuarioPorCorreo(registro.getCorreo());
+
+    if (usuarioBd != null) {
+      System.out.println("Este usuario ya existe");
+      return false;
+    }
+
+    registro.setPassword1(Encrypter.hashPassword(registro.getPassword1()));
     bd.registrarUsuario(registro);
     return true;
   }
@@ -54,13 +62,14 @@ public class Modelo {
       return false;
     }
 
-    if (registro.getPassword1().matches("^\\d{4}$") != registro.getPassword2().matches("^\\d{4}$")) {
-      System.out.println(
-          "Contraseña no valida, solo numeros de 4 digitos");
-      return false;
-    }
     if (!registro.getPassword1().equals(registro.getPassword2())) {
       System.out.println("Contraseñas no coinciden");
+      return false;
+    }
+
+    if (!registro.getPassword1().matches("^\\d{4}$")) {
+      System.out.println(
+          "Contraseña no valida, solo numeros de 4 digitos");
       return false;
     }
     return true;
