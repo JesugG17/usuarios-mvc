@@ -9,10 +9,16 @@ public class Conexion {
 
     private Conexion() {
         try {
-            String url = "postgresql://postgres:pzqWVDsQmULgtAmlLxqeWULXDivscPvE@junction.proxy.rlwy.net:17683/railway";
-            connection = DriverManager.getConnection(url, "postgres", "pzqWVDsQmULgtAmlLxqeWULXDivscPvE");
+            String url =
+                "jdbc:postgresql://junction.proxy.rlwy.net:17683/railway";
+            connection = DriverManager.getConnection(
+                url,
+                "postgres",
+                "pzqWVDsQmULgtAmlLxqeWULXDivscPvE"
+            );
             System.out.println("Conexion establecida con exito");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("Error al conectar con la base de datos");
         }
     }
@@ -23,5 +29,4 @@ public class Conexion {
         }
         return connection;
     }
-
 }
