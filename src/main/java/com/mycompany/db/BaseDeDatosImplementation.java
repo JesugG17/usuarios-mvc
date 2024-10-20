@@ -55,17 +55,17 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
     }
 
     @Override
-    public int actualizarIntentos(String correo, int num_intentos){
+    public int actualizarIntentos(String correo){
         int resultado = 0;
         String sql =
-            "UPDATE usuarios SET num_intentos = ? WHERE correo = ?";
+            "UPDATE usuarios SET num_intentos = num_intentos + 1 WHERE correo = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, num_intentos + 1);
             ps.setString(2, correo);
             resultado = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(resultado);
         return resultado;
     }
 
