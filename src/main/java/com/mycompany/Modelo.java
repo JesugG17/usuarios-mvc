@@ -5,6 +5,9 @@ import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
 import com.mycompany.models.Response;
 import com.mycompany.utils.Encrypter;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 
 public class Modelo {
 
@@ -16,13 +19,40 @@ public class Modelo {
 
     public Response validarIngreso(Usuario usuario) {
         Usuario usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
-
         if (usuarioBD == null) {
             return new Response(false, "El usuario no existe");
         }
 
         if (usuarioBD.isActivo()) {
             return new Response(false, "Ya hay una sesión activa");
+        }
+
+        if (
+            usuarioBD.getFecha_bloqueado() != null &&
+            usuarioBD.getFecha_bloqueado().after(new Date())
+        ) {
+            Instant fechaActual = new Date().toInstant();
+
+            long tiempoRestante = Duration.between(
+                fechaActual,
+                usuarioBD.getFecha_bloqueado().toInstant()
+            ).toMinutes();
+
+            return new Response(
+                false,
+                "Usuario bloqueado, intente mas tarde en: " +
+                tiempoRestante +
+                " minutos"
+            );
+        }
+
+        if (
+            usuarioBD.getFecha_bloqueado() != null &&
+            usuarioBD.getFecha_bloqueado().before(new Date())
+        ) {
+            bd.reiniciarIntentos(usuarioBD.getCorreo());
+            bd.reiniciarFechaBloqueo(usuarioBD.getCorreo());
+            usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
         }
 
         if (usuarioBD.getNum_intentos() >= 3) {
@@ -89,6 +119,7 @@ public class Modelo {
     }
 
     public void cerrarSesion(String correoLogin) {
+        System.out.println("modelo cerrar sesion: " + correoLogin);
         bd.actualizarActivo(correoLogin);
     }
 }

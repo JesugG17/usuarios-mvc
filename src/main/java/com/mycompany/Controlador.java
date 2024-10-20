@@ -25,10 +25,8 @@ public class Controlador implements ActionListener, WindowListener {
                 vista.mostarMensaje(response.getMessage());
                 return;
             }
-
-            vista.mostrarPrincipal(true);
             vista.setCorreoLogin(response.getUserEmail());
-            System.out.println(vista.getCorreoLogin());
+            vista.mostrarPrincipal(true);
             return;
         }
         if (e.getSource() == vista.getBtnRegistrar()) {
