@@ -20,7 +20,7 @@ public class Vista extends JFrame {
     private String correoLogin;
 
     public Vista() {
-        super("Inicio de seccion");
+        super("Inicio de Sesión");
         hazInterfaz();
     }
 
@@ -83,7 +83,7 @@ public class Vista extends JFrame {
         modalPanelPrincipal.setSize(600, 600);
         modalPanelPrincipal.setResizable(false);
         modalPanelPrincipal.setLocationRelativeTo(null);
-        btnCerrarSeccion = new JButton("Cerrar seccion");
+        btnCerrarSeccion = new JButton("Cerrar Sesión");
         btnCerrarSeccion.setBounds(200, 200, 200, 30);
         modalPanelPrincipal.add(btnCerrarSeccion);
 
@@ -134,6 +134,15 @@ public class Vista extends JFrame {
         txtCorreoRegistro.setText("");
         txtPasswordRegistro1.setText("");
         txtPasswordRegistro2.setText("");
+    }
+
+    public void limpiarInicioSesion() {
+      txtCorreoLogin.setText("");
+      txtPasswordLogin.setText("");
+    }
+
+    public void mostrarPantallaPrincipal() {
+      this.setVisible(true);
     }
 
     public void mostrarPrincipal(boolean mostrar) { // muestra o oculta el panel principal

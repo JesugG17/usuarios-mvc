@@ -26,6 +26,7 @@ public class Controlador implements ActionListener, WindowListener {
                 return;
             }
             vista.setCorreoLogin(response.getUserEmail());
+            vista.limpiarInicioSesion();
             vista.mostrarPrincipal(true);
             return;
         }
@@ -56,8 +57,7 @@ public class Controlador implements ActionListener, WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        vista.setVisible(true); // al cerrar el panel de registro o principal vuelve a mostrar el inicio de
-        // seccion
+        vista.mostrarPantallaPrincipal(); 
     }
 
     @Override

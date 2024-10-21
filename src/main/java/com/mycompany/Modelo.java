@@ -33,16 +33,27 @@ public class Modelo {
         ) {
             Instant fechaActual = new Date().toInstant();
 
-            long tiempoRestante = Duration.between(
+            long segundosRestantes = Duration.between(
                 fechaActual,
                 usuarioBD.getFecha_bloqueado().toInstant()
-            ).toMinutes();
+            ).getSeconds();
+
+
+            long minutosRestantes = segundosRestantes / 60;
+            long segundos = segundosRestantes % 60;
+            String tiempo;
+
+            if (minutosRestantes >= 1) {
+              String unidadMinutos  = minutosRestantes == 1 ? " minuto" : " minutos";
+              tiempo = minutosRestantes + unidadMinutos;
+            } else {
+              String unidadSegundos = segundos == 1 ? " segundo" : " segundos";
+              tiempo = segundos + unidadSegundos;
+            }
 
             return new Response(
                 false,
-                "Usuario bloqueado, intente mas tarde en: " +
-                tiempoRestante +
-                " minutos"
+                "Usuario bloqueado, intente mas tarde en: " + tiempo
             );
         }
 
