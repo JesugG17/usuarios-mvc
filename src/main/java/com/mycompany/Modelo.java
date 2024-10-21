@@ -97,19 +97,14 @@ public class Modelo {
                 .getCorreo()
                 .matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
         ) {
-            System.out.println("Correo no valido");
             return new Response(false, "Correo no valido");
         }
 
         if (!registro.getPassword1().equals(registro.getPassword2())) {
-            System.out.println("Contraseñas no coinciden");
             return new Response(false, "Las contraseñas no coinciden");
         }
 
         if (!registro.getPassword1().matches("^\\d{4}$")) {
-            System.out.println(
-                "Contraseña no valida, solo numeros de 4 digitos"
-            );
             return new Response(
                 false,
                 "Contraseña no valida, solo numeros de 4 digitos"
@@ -119,7 +114,6 @@ public class Modelo {
     }
 
     public void cerrarSesion(String correoLogin) {
-        System.out.println("modelo cerrar sesion: " + correoLogin);
         bd.actualizarActivo(correoLogin);
     }
 }

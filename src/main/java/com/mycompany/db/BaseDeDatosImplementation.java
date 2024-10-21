@@ -71,7 +71,6 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
     @Override
     public int actualizarActivo(String correo) {
         int resultado = 0;
-        System.out.println("se actualiza activo");
         String sql = "UPDATE usuarios SET activo = NOT activo WHERE correo = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, correo);
@@ -79,7 +78,6 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("resultado: " + resultado);
         return resultado;
     }
 
