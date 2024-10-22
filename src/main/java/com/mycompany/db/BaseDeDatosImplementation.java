@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class BaseDeDatosImplementation extends BaseDeDatos {
 
@@ -57,11 +58,31 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
     @Override
     public int actualizarIntentos(String correo) {
         int resultado = 0;
-        String sql =
+        String selectSql = "SELECT * FROM usuarios WHERE correo = ? FOR UPDATE";
+        String updateSql =
             "UPDATE usuarios SET num_intentos = num_intentos + 1 WHERE correo = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, correo);
-            resultado = ps.executeUpdate();
+
+        try {
+            conexion.setAutoCommit(false);
+            try (
+                PreparedStatement selectPs = conexion.prepareStatement(
+                    selectSql
+                )
+            ) {
+                selectPs.setString(1, correo);
+                selectPs.executeQuery();
+            }
+
+            try (
+                PreparedStatement updatePs = conexion.prepareStatement(
+                    updateSql
+                )
+            ) {
+                updatePs.setString(1, correo);
+                resultado = updatePs.executeUpdate();
+            }
+
+            conexion.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
