@@ -30,7 +30,7 @@ public class Vista extends JFrame {
         setSize(500, 400);
         setResizable(false);
         setLocationRelativeTo(null);
-        JLabel titulobl = new JLabel("Inicio de seccion");
+        JLabel titulobl = new JLabel("Inicio de sesion");
         JLabel lblCorreo = new JLabel("Ingresa tu correo:");
         JLabel lblPassword = new JLabel("Ingresa la Contraseña:");
         txtCorreoLogin = new JTextField(20);
