@@ -5,7 +5,7 @@ import com.password4j.Hash;
 import com.password4j.Password;
 import com.password4j.types.Bcrypt;
 
-public class Encrypter {
+public class HashAdapter {
   
   public static String hashPassword(String password) {
     BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.B, 12);
