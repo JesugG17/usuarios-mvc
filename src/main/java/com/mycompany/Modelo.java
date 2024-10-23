@@ -20,7 +20,7 @@ public class Modelo {
     public Response validarIngreso(Usuario usuario) {
         Usuario usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
         if (usuarioBD == null) {
-            return new Response(false, "El usuario no existe");
+            return new Response(false, "Usuario o contraseña incorrectos");
         }
 
         if (usuarioBD.isActivo()) {
@@ -79,10 +79,15 @@ public class Modelo {
 
         if (!Encrypter.matchPasswords(usuario.getNip(), usuarioBD.getNip())) {
             bd.actualizarIntentos(usuario.getCorreo());
-            return new Response(false, "Contraseña o usuario incorrecto");
+            return new Response(false, "Usuario o contraseña incorrectos");
         }
 
-        bd.actualizarActivo(usuario.getCorreo());
+        int resultado = bd.iniciarSesion(usuario.getCorreo());
+
+        if (resultado == 0) {
+          return new Response(false, "Ya hay una sesión activa");
+        }
+
         return new Response(
             true,
             "Inicio de sesión exitoso",
@@ -152,6 +157,6 @@ public class Modelo {
     }
 
     public void cerrarSesion(String correoLogin) {
-        bd.actualizarActivo(correoLogin);
+        bd.cerrarSesion(correoLogin);
     }
 }

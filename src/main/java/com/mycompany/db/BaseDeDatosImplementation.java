@@ -69,19 +69,6 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
     }
 
     @Override
-    public int actualizarActivo(String correo) {
-        int resultado = 0;
-        String sql = "UPDATE usuarios SET activo = NOT activo WHERE correo = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, correo);
-            resultado = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resultado;
-    }
-
-    @Override
     public int actualizarFechaBloqueo(String correo) {
         int resultado = 0;
         String sql =
@@ -113,6 +100,32 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
         int resultado = 0;
         String sql =
             "UPDATE usuarios SET fecha_bloqueado = NULL WHERE correo = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            resultado = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    @Override
+    public int iniciarSesion(String correo) {
+      int resultado = 0;
+        String sql = "UPDATE usuarios SET activo = true WHERE correo = ? AND activo = false";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            resultado = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    @Override
+    public int cerrarSesion(String correo) {
+      int resultado = 0;
+        String sql = "UPDATE usuarios SET activo = false WHERE correo = ? and activo = true";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, correo);
             resultado = ps.executeUpdate();

@@ -11,9 +11,11 @@ public abstract class BaseDeDatos {
 
     public abstract int actualizarIntentos(String correo);
 
-    public abstract int actualizarActivo(String correo);
-
     public abstract int actualizarFechaBloqueo(String correo);
+
+    public abstract int iniciarSesion(String correo);
+
+    public abstract int cerrarSesion(String correo);
 
     public abstract int reiniciarIntentos(String correo);
 
