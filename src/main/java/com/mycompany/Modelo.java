@@ -4,7 +4,7 @@ import com.mycompany.db.BaseDeDatos;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
 import com.mycompany.models.Response;
-import com.mycompany.utils.Encrypter;
+import com.mycompany.utils.HashAdapter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -77,7 +77,7 @@ public class Modelo {
             );
         }
 
-        if (!Encrypter.matchPasswords(usuario.getNip(), usuarioBD.getNip())) {
+        if (!HashAdapter.matchPasswords(usuario.getNip(), usuarioBD.getNip())) {
             bd.actualizarIntentos(usuario.getCorreo());
             return new Response(false, "Usuario o contraseña incorrectos");
         }
@@ -105,7 +105,7 @@ public class Modelo {
             return new Response(false, "Este usuario ya existe");
         }
 
-        registro.setPassword1(Encrypter.hashPassword(registro.getPassword1()));
+        registro.setPassword1(HashAdapter.hashPassword(registro.getPassword1()));
         bd.registrarUsuario(registro);
         return new Response(true, "Usuario registrado exitosamente");
     }
