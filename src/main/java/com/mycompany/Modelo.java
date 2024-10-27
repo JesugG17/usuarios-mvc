@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.api.HttpClient;
 import com.mycompany.db.BaseDeDatos;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
@@ -12,9 +13,14 @@ import java.util.Date;
 public class Modelo {
 
     private BaseDeDatos bd;
+    private HttpClient httpClient;
 
-    public Modelo(BaseDeDatos bd) {
+    public Modelo(
+      BaseDeDatos bd,
+      HttpClient httpClient
+    ) {
         this.bd = bd;
+        this.httpClient = httpClient;
     }
 
     public Response validarIngreso(Usuario usuario) {
@@ -87,6 +93,8 @@ public class Modelo {
         if (resultado == 0) {
           return new Response(false, "Ya hay una sesión activa");
         }
+
+        this.httpClient.enviarCorreo(usuario.getCorreo());
 
         return new Response(
             true,
