@@ -30,7 +30,11 @@ public class Modelo {
             return new Response(false, "Usuario o contraseña incorrectos");
         }
 
-        if (usuarioBD.isActivo() && usuarioBD.getNum_intentos() == INTENTOS_MAXIMOS) {
+        if (
+          HashAdapter.matchPasswords(usuario.getNip(), usuarioBD.getNip()) &&
+          usuarioBD.isActivo() && 
+          usuarioBD.getNum_intentos() == INTENTOS_MAXIMOS
+        ) {
           httpClient.enviarCorreo(usuario.getCorreo());
           return new Response(false, "Hay una sesión activa y ha excedido el numero maximo de intentos, hemos enviado un codigo de verificacion a su correo.", true);
         }
