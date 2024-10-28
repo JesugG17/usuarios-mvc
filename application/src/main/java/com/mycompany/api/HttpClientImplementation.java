@@ -1,9 +1,7 @@
 package com.mycompany.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,23 +19,49 @@ public class HttpClientImplementation extends HttpClient {
     this.httpClient = new OkHttpClient();
   }
 
-  public void enviarCorreo(String email) {
+  @Override
+  public boolean enviarCorreo(String email) {
     try {
-            
-      String json = "{\"email\":" + email + "}";
-  
+      
+      String jsonData = "{ \"email\": " + "\"" + email + "\"" + "}";
+      MediaType contentType = MediaType.get("application/json");
+      RequestBody body = RequestBody.create(jsonData, contentType);
+
       Request request = new Request.Builder()
         .url(this.url + "/send-token")
-        .post(RequestBody.create(JSON, json))
+        .post(body)
         .build();
-  
+
       Response response = this.httpClient.newCall(request).execute();
       ObjectMapper mapper = new ObjectMapper();
       ApiResponse apiResponse = mapper.readValue(response.body().byteStream(), ApiResponse.class);
-      System.out.println(apiResponse);
+      return apiResponse.ok;
     } catch (Exception e) {
       e.printStackTrace();
-      System.out.println("Algo salió mal");
+      return false;
+    }
+  }
+
+  @Override
+  public com.mycompany.models.Response validarToken(String token, String correo) {
+    try {
+      
+      String jsonData = "{ \"email\": \"" + correo + "\", \"token\": \"" + token + "\" }";
+      MediaType contentType = MediaType.get("application/json");
+      RequestBody body = RequestBody.create(jsonData, contentType);
+
+      Request request = new Request.Builder()
+        .url(this.url + "/verify-token")
+        .post(body)
+        .build();
+
+      Response response = this.httpClient.newCall(request).execute();
+      ObjectMapper mapper = new ObjectMapper();
+      ApiResponse apiResponse = mapper.readValue(response.body().byteStream(), ApiResponse.class);
+      return new com.mycompany.models.Response(apiResponse.ok, apiResponse.message);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new com.mycompany.models.Response(false, "Algo ha salido mal al enviar el token");
     }
   }
 

@@ -21,6 +21,12 @@ public class Controlador implements ActionListener, WindowListener {
         if (e.getSource() == vista.getBtnIngresar()) {
             Response response = modelo.validarIngreso(vista.getUsuario());
 
+            if (response.getPutToken()) {
+              vista.mostarMensaje(response.getMessage());
+              vista.mostrarModalToken();
+              return;
+            }
+
             if (!response.isValid()) {
                 vista.mostarMensaje(response.getMessage());
                 return;
@@ -48,7 +54,19 @@ public class Controlador implements ActionListener, WindowListener {
             return;
         }
 
-        if (e.getSource() == vista.getBtnCerrarSeccion()) {
+        if (e.getSource() == vista.getBtnIngresarToken()) {
+          Response response = modelo.validarToken(vista.getToken(), vista.getUsuario().getCorreo());
+          vista.mostarMensaje(response.getMessage());
+
+          if (!response.isValid()) {
+            return;
+          }
+          
+          vista.cerrarModalToken();
+          return;
+        }
+
+        if (e.getSource() == vista.getBtnCerrarSesion()) {
             modelo.cerrarSesion(vista.getCorreoLogin());
             vista.mostrarPrincipal(false);
             return;

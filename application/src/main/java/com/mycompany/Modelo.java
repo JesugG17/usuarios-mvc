@@ -14,6 +14,7 @@ public class Modelo {
 
     private BaseDeDatos bd;
     private HttpClient httpClient;
+    private final int INTENTOS_MAXIMOS = 3;
 
     public Modelo(
       BaseDeDatos bd,
@@ -29,8 +30,14 @@ public class Modelo {
             return new Response(false, "Usuario o contraseña incorrectos");
         }
 
+        if (usuarioBD.isActivo() && usuarioBD.getNum_intentos() == INTENTOS_MAXIMOS) {
+          httpClient.enviarCorreo(usuario.getCorreo());
+          return new Response(false, "Hay una sesión activa y ha excedido el numero maximo de intentos, hemos enviado un codigo de verificacion a su correo.", true);
+        }
+
         if (usuarioBD.isActivo()) {
-            return new Response(false, "Ya hay una sesión activa");
+          bd.actualizarIntentos(usuario.getCorreo());
+          return new Response(false, "Ya hay una sesión activa");
         }
 
         if (
@@ -75,7 +82,7 @@ public class Modelo {
             usuarioBD = bd.obtenerUsuarioPorCorreo(usuario.getCorreo());
         }
 
-        if (usuarioBD.getNum_intentos() >= 3) {
+        if (usuarioBD.getNum_intentos() >= INTENTOS_MAXIMOS) {
             bd.actualizarFechaBloqueo(usuario.getCorreo());
             return new Response(
                 false,
@@ -116,6 +123,22 @@ public class Modelo {
         registro.setPassword1(HashAdapter.hashPassword(registro.getPassword1()));
         bd.registrarUsuario(registro);
         return new Response(true, "Usuario registrado exitosamente");
+    }
+
+    public Response validarToken(String token, String correo) {
+
+      Response response = httpClient.validarToken(token, correo);
+      if (!response.isValid()) {
+        return response;
+      }
+
+      bd.cerrarSesion(correo);
+      bd.reiniciarIntentos(correo);
+      return response;
+    }
+    
+    public void cerrarSesion(String correoLogin) {
+        bd.cerrarSesion(correoLogin);
     }
 
     private Response validaciones(Registro registro) {
@@ -162,9 +185,5 @@ public class Modelo {
             );
         }
         return new Response(true);
-    }
-
-    public void cerrarSesion(String correoLogin) {
-        bd.cerrarSesion(correoLogin);
     }
 }

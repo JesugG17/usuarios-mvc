@@ -1,6 +1,10 @@
 package com.mycompany.api;
 
+import com.mycompany.models.Response;
+
 public abstract class HttpClient {
   
-  public abstract void enviarCorreo(String correo);
+  public abstract boolean enviarCorreo(String correo);
+
+  public abstract Response validarToken(String token, String correo);
 }

@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.components.JTextFieldLimited;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
 import java.awt.Font;
@@ -15,9 +16,10 @@ public class Vista extends JFrame {
 
     private JTextField txtCorreoLogin, txtNombreRegistro, txtCorreoRegistro;
     private JPasswordField txtPasswordLogin, txtPasswordRegistro1, txtPasswordRegistro2;
-    private JButton btnIngresar, btnRegistrar, btnRegistrarUsuario, btnCerrarSeccion;
-    private JDialog modalRegistarUsuario, modalPanelPrincipal;
+    private JButton btnIngresar, btnRegistrar, btnRegistrarUsuario, btnCerrarSesion, btnIngresarToken;
+    private JDialog modalRegistarUsuario, modalPanelPrincipal, modalIngresarToken;
     private String correoLogin;
+    private JTextFieldLimited txtToken;
 
     public Vista() {
         super("Inicio de Sesión");
@@ -83,9 +85,27 @@ public class Vista extends JFrame {
         modalPanelPrincipal.setSize(600, 600);
         modalPanelPrincipal.setResizable(false);
         modalPanelPrincipal.setLocationRelativeTo(null);
-        btnCerrarSeccion = new JButton("Cerrar Sesión");
-        btnCerrarSeccion.setBounds(200, 200, 200, 30);
-        modalPanelPrincipal.add(btnCerrarSeccion);
+        btnCerrarSesion = new JButton("Cerrar Sesión");
+        btnCerrarSesion.setBounds(200, 200, 200, 30);
+        modalPanelPrincipal.add(btnCerrarSesion);
+
+        modalIngresarToken = new JDialog(this, true);
+        modalIngresarToken.setTitle("Modal verificar token");
+        modalIngresarToken.setLayout(null);
+        modalIngresarToken.setSize(250, 250);
+        modalIngresarToken.setResizable(false);
+        modalIngresarToken.setLocationRelativeTo(null);
+        txtToken = new JTextFieldLimited(5);
+        btnIngresarToken = new JButton("Verificar token");
+        JLabel lblIngresarToken = new JLabel("Ingresar token");
+        {
+          lblIngresarToken.setBounds(15, 30, 100, 20);
+          txtToken.setBounds(15, 50, 200, 30);
+          btnIngresarToken.setBounds(15, 100, 200, 40);
+        }
+        modalIngresarToken.add(lblIngresarToken);
+        modalIngresarToken.add(txtToken);
+        modalIngresarToken.add(btnIngresarToken);
 
         Font fuente1 = new Font("Arial", 1, 19);
         Font fuente2 = new Font("Arial", 1, 16);
@@ -150,11 +170,20 @@ public class Vista extends JFrame {
         modalPanelPrincipal.setVisible(mostrar);
     }
 
+    public void mostrarModalToken() {
+      modalIngresarToken.setVisible(true);
+    }
+
+    public void cerrarModalToken() {
+      modalIngresarToken.setVisible(false);
+    }
+
     public void setControlador(Controlador controlador) {
         btnIngresar.addActionListener(controlador);
         btnRegistrar.addActionListener(controlador);
         btnRegistrarUsuario.addActionListener(controlador);
-        btnCerrarSeccion.addActionListener(controlador);
+        btnCerrarSesion.addActionListener(controlador);
+        btnIngresarToken.addActionListener(controlador);
         modalPanelPrincipal.addWindowListener(controlador);
         modalRegistarUsuario.addWindowListener(controlador);
     }
@@ -191,12 +220,20 @@ public class Vista extends JFrame {
         return btnRegistrarUsuario;
     }
 
-    public JButton getBtnCerrarSeccion() {
-        return btnCerrarSeccion;
+    public JButton getBtnCerrarSesion() {
+        return btnCerrarSesion;
+    }
+
+    public JButton getBtnIngresarToken() {
+      return btnIngresarToken;
     }
 
     public String getCorreoLogin() {
         return correoLogin;
+    }
+
+    public String getToken() {
+      return txtToken.getText();
     }
 
     public void setCorreoLogin(String correo) {
