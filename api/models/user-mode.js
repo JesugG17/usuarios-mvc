@@ -17,6 +17,9 @@ export const User = sequelize.define('usuario', {
   activo: {
     type: DataTypes.BOOLEAN
   },
+  verificado: {
+    type: DataTypes.BOOLEAN
+  },
   num_intentos: {
     type: DataTypes.INTEGER
   },
