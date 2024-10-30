@@ -1,6 +1,6 @@
 package com.mycompany;
 
-import com.mycompany.components.JTextFieldLimited;
+import com.mycompany.components.ModalToken;
 import com.mycompany.entities.Registro;
 import com.mycompany.entities.Usuario;
 import java.awt.Font;
@@ -17,9 +17,10 @@ public class Vista extends JFrame {
     private JTextField txtCorreoLogin, txtNombreRegistro, txtCorreoRegistro;
     private JPasswordField txtPasswordLogin, txtPasswordRegistro1, txtPasswordRegistro2;
     private JButton btnIngresar, btnRegistrar, btnRegistrarUsuario, btnCerrarSesion, btnIngresarToken;
-    private JDialog modalRegistarUsuario, modalPanelPrincipal, modalIngresarToken;
+    private JDialog modalPanelPrincipal;
+    private JFrame modalRegistrarUsuario;
     private String correoLogin;
-    private JTextFieldLimited txtToken;
+    private ModalToken modalTokenRegistro, modalTokenRestaurarSesion;
 
     public Vista() {
         super("Inicio de Sesión");
@@ -52,11 +53,11 @@ public class Vista extends JFrame {
             btnRegistrar.setBounds(280, 265, 180, 40);
         }
 
-        modalRegistarUsuario = new JDialog(this, "Registro de usuarios", true);
-        modalRegistarUsuario.setLayout(null);
-        modalRegistarUsuario.setSize(500, 450);
-        modalRegistarUsuario.setResizable(false);
-        modalRegistarUsuario.setLocationRelativeTo(null);
+        modalRegistrarUsuario = new JFrame("Registro de usuarios");
+        modalRegistrarUsuario.setLayout(null);
+        modalRegistrarUsuario.setSize(500, 450);
+        modalRegistrarUsuario.setResizable(false);
+        modalRegistrarUsuario.setLocationRelativeTo(null);
         JLabel nombreRegistroLabel = new JLabel("Ingresa tu nombre:");
         txtNombreRegistro = new JTextField(20);
         JLabel correoRegistroLabel = new JLabel("Ingresa tu correo:");
@@ -89,23 +90,8 @@ public class Vista extends JFrame {
         btnCerrarSesion.setBounds(200, 200, 200, 30);
         modalPanelPrincipal.add(btnCerrarSesion);
 
-        modalIngresarToken = new JDialog(this, true);
-        modalIngresarToken.setTitle("Modal verificar token");
-        modalIngresarToken.setLayout(null);
-        modalIngresarToken.setSize(250, 250);
-        modalIngresarToken.setResizable(false);
-        modalIngresarToken.setLocationRelativeTo(null);
-        txtToken = new JTextFieldLimited(5);
-        btnIngresarToken = new JButton("Verificar token");
-        JLabel lblIngresarToken = new JLabel("Ingresar token");
-        {
-          lblIngresarToken.setBounds(15, 30, 100, 20);
-          txtToken.setBounds(15, 50, 200, 30);
-          btnIngresarToken.setBounds(15, 100, 200, 40);
-        }
-        modalIngresarToken.add(lblIngresarToken);
-        modalIngresarToken.add(txtToken);
-        modalIngresarToken.add(btnIngresarToken);
+        modalTokenRegistro = new ModalToken();
+        modalTokenRestaurarSesion = new ModalToken();
 
         Font fuente1 = new Font("Arial", 1, 19);
         Font fuente2 = new Font("Arial", 1, 16);
@@ -132,21 +118,21 @@ public class Vista extends JFrame {
         add(txtPasswordLogin);
         add(btnIngresar);
         add(btnRegistrar);
-        modalRegistarUsuario.add(nombreRegistroLabel);
-        modalRegistarUsuario.add(txtNombreRegistro);
-        modalRegistarUsuario.add(correoRegistroLabel);
-        modalRegistarUsuario.add(txtCorreoRegistro);
-        modalRegistarUsuario.add(passwordRegistroLabel1);
-        modalRegistarUsuario.add(txtPasswordRegistro1);
-        modalRegistarUsuario.add(passwordRegistroLabel2);
-        modalRegistarUsuario.add(txtPasswordRegistro2);
-        modalRegistarUsuario.add(btnRegistrarUsuario);
+        modalRegistrarUsuario.add(nombreRegistroLabel);
+        modalRegistrarUsuario.add(txtNombreRegistro);
+        modalRegistrarUsuario.add(correoRegistroLabel);
+        modalRegistrarUsuario.add(txtCorreoRegistro);
+        modalRegistrarUsuario.add(passwordRegistroLabel1);
+        modalRegistrarUsuario.add(txtPasswordRegistro1);
+        modalRegistrarUsuario.add(passwordRegistroLabel2);
+        modalRegistrarUsuario.add(txtPasswordRegistro2);
+        modalRegistrarUsuario.add(btnRegistrarUsuario);
         setVisible(true);
     }
 
     public void mostrarRegistro(boolean mostrar) { // muestra o oculta el panel de registro
         setVisible(!mostrar);
-        modalRegistarUsuario.setVisible(mostrar);
+        modalRegistrarUsuario.setVisible(mostrar);
     }
 
     public void limpiarRegistro() {
@@ -170,12 +156,24 @@ public class Vista extends JFrame {
         modalPanelPrincipal.setVisible(mostrar);
     }
 
-    public void mostrarModalToken() {
-      modalIngresarToken.setVisible(true);
+    public void mostrarModalTokenVerificarUsuario() {
+      modalTokenRegistro.setVisible(true);
     }
 
-    public void cerrarModalToken() {
-      modalIngresarToken.setVisible(false);
+    public void mostrarModalTokenRestaurarSesion() {
+      modalTokenRestaurarSesion.setVisible(true);
+    }
+
+    public void cerrarModalTokenVerificarUsuario() {
+      modalRegistrarUsuario.setVisible(false);
+    }
+
+    public void cerrarModalTokenRestaurarSesion() {
+      modalTokenRestaurarSesion.setVisible(false);
+    }
+
+    public boolean modalRegistroAbierto() {
+      return modalRegistrarUsuario.isVisible();
     }
 
     public void setControlador(Controlador controlador) {
@@ -183,9 +181,10 @@ public class Vista extends JFrame {
         btnRegistrar.addActionListener(controlador);
         btnRegistrarUsuario.addActionListener(controlador);
         btnCerrarSesion.addActionListener(controlador);
-        btnIngresarToken.addActionListener(controlador);
+        modalTokenRegistro.getButton().addActionListener(controlador);
+        modalTokenRestaurarSesion.getButton().addActionListener(controlador);
         modalPanelPrincipal.addWindowListener(controlador);
-        modalRegistarUsuario.addWindowListener(controlador);
+        modalRegistrarUsuario.addWindowListener(controlador);
     }
 
     public void mostarMensaje(String mensaje) {
@@ -232,8 +231,20 @@ public class Vista extends JFrame {
         return correoLogin;
     }
 
-    public String getToken() {
-      return txtToken.getText();
+    public String getTokenRestaurarSesion() {
+      return modalTokenRestaurarSesion.getToken();
+    }
+
+    public String getTokenVerificarUsuario() {
+      return modalTokenRegistro.getToken();
+    }
+
+    public JButton getButtonModalTokenRestaurarSesion() {
+      return modalTokenRestaurarSesion.getButton();
+    }
+
+    public JButton getButtonModalTokenVerificarUsuario() {
+      return modalTokenRegistro.getButton();
     }
 
     public void setCorreoLogin(String correo) {

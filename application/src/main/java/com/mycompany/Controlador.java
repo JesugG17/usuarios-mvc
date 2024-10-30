@@ -21,9 +21,15 @@ public class Controlador implements ActionListener, WindowListener {
         if (e.getSource() == vista.getBtnIngresar()) {
             Response response = modelo.validarIngreso(vista.getUsuario());
 
-            if (response.getPutToken()) {
+            if (response.restaurarSesion()) {
               vista.mostarMensaje(response.getMessage());
-              vista.mostrarModalToken();
+              vista.mostrarModalTokenRestaurarSesion();
+              return;
+            }
+
+            if (response.verificarUsuario()) {
+              vista.mostarMensaje(response.getMessage());
+              vista.mostrarModalTokenVerificarUsuario();
               return;
             }
 
@@ -49,22 +55,61 @@ public class Controlador implements ActionListener, WindowListener {
             }
 
             vista.mostarMensaje(response.getMessage());
-            vista.mostrarRegistro(false);
-            vista.limpiarRegistro();
+            vista.mostrarModalTokenVerificarUsuario();
             return;
         }
 
-        if (e.getSource() == vista.getBtnIngresarToken()) {
-          Response response = modelo.validarToken(vista.getToken(), vista.getUsuario().getCorreo());
+        if (e.getSource() == vista.getButtonModalTokenRestaurarSesion()) {
+          String correoUsuario = vista.getUsuario().getCorreo();
+          Response response = modelo.restaurarSession(vista.getTokenRestaurarSesion(), correoUsuario);
+
           vista.mostarMensaje(response.getMessage());
 
           if (!response.isValid()) {
             return;
           }
-          
-          vista.cerrarModalToken();
-          return;
+
+          vista.cerrarModalTokenRestaurarSesion();
         }
+
+        if (e.getSource() == vista.getButtonModalTokenVerificarUsuario()) {
+          String correoUsuario = vista.getRegistro().getCorreo();
+
+          if (correoUsuario.length() == 0) {
+            correoUsuario = vista.getUsuario().getCorreo();
+          }
+
+          System.out.println(vista.getRegistro().getCorreo());
+          Response response = modelo.verificarUsuario(vista.getTokenVerificarUsuario(), correoUsuario);
+
+          vista.mostarMensaje(response.getMessage());
+
+          if (!response.isValid()) {
+            return;
+          }
+
+          vista.cerrarModalTokenVerificarUsuario();
+          vista.mostrarRegistro(false);
+          vista.limpiarRegistro();
+        }
+
+        // if (e.getSource() == vista.getBtnIngresarToken()) {
+
+
+        //   String correoUsuario = vista.getUsuario().getCorreo();
+        //   Response response = vista.modalRegistroAbierto()
+        //     ? modelo.verificarUsuario(vista.getToken(), correoUsuario)
+        //     : modelo.restaurarSession(vista.getToken(), correoUsuario);
+
+        //   vista.mostarMensaje(response.getMessage());
+
+        //   if (!response.isValid()) {
+        //     return;
+        //   }
+          
+        //   vista.cerrarModalToken();
+        //   return;
+        // }
 
         if (e.getSource() == vista.getBtnCerrarSesion()) {
             modelo.cerrarSesion(vista.getCorreoLogin());

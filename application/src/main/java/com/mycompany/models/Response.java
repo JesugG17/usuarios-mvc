@@ -4,7 +4,7 @@ public class Response {
 
     private boolean isValid;
     private String message;
-    private boolean putToken;
+    private boolean verificarUsuario, restaurarSesion;
     private String userEmail;
 
     public Response(boolean isValid, String message, String userEmail) {
@@ -15,11 +15,6 @@ public class Response {
 
     public Response(boolean isValid, String message) {
         this(isValid, message, "");
-    }
-
-    public Response(boolean isValid, String message, boolean putToken) {
-      this(isValid, message, "");
-      this.putToken = putToken;
     }
 
     public Response(boolean isValid) {
@@ -38,7 +33,21 @@ public class Response {
         return this.userEmail;
     }
 
-    public boolean getPutToken() {
-      return this.putToken;
+    public boolean restaurarSesion() {
+      return this.restaurarSesion;
+    }
+
+    public boolean verificarUsuario() {
+      return this.verificarUsuario;
+    }
+
+    public Response withTokenRestaurarSesion() {
+      this.restaurarSesion = true;
+      return this;
+    }
+
+    public Response withTokenVerificarUsuario() {
+      this.verificarUsuario = true;
+      return this;
     }
 }

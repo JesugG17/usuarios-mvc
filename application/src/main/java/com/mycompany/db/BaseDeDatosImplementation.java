@@ -44,6 +44,7 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
                     rs.getString("nip"),
                     rs.getString("nombre"),
                     rs.getBoolean("activo"),
+                    rs.getBoolean("verificado"),
                     rs.getInt("num_intentos"),
                     rs.getTimestamp("fecha_bloqueado")
                 );

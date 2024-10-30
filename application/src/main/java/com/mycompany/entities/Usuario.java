@@ -4,13 +4,13 @@ import java.util.Date;
 public class Usuario {
 
     private String correo, nip, nombre;
-    private boolean activo;
+    private boolean activo, verificado;
     private int num_intentos;
     private Date fecha_bloqueado;
 
 
     public Usuario(String correo, String password ) {
-        this(correo, password, "", false, 0, null);
+        this(correo, password, "", false, false, 0, null);
     }
 
     public Usuario(
@@ -18,6 +18,7 @@ public class Usuario {
             String nip,
             String nombre,
             boolean activo,
+            boolean verificado,
             int num_intentos,
             Date fecha_bloqueado
             )
@@ -26,6 +27,7 @@ public class Usuario {
         this.nip = nip;
         this.nombre = nombre;
         this.activo = activo;
+        this.verificado = verificado;
         this.num_intentos = num_intentos;
         this.fecha_bloqueado = fecha_bloqueado;
     }
@@ -43,6 +45,10 @@ public class Usuario {
     public void setNombre(String nombre) { this.nombre = nombre; }
 
     public boolean isActivo() { return activo; }
+
+    public boolean estaVerificado() {
+      return verificado;
+    }
 
     public void setActivo(boolean activo) { this.activo = activo; }
 

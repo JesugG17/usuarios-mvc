@@ -30,13 +30,19 @@ public class Modelo {
             return new Response(false, "Usuario o contraseña incorrectos");
         }
 
+        if (!usuarioBD.estaVerificado()) {
+          httpClient.enviarCorreo(usuario.getCorreo());
+          return new Response(false, "Usuario no esta verificado").withTokenVerificarUsuario();
+        }
+
         if (
           HashAdapter.matchPasswords(usuario.getNip(), usuarioBD.getNip()) &&
           usuarioBD.isActivo() && 
           usuarioBD.getNum_intentos() == INTENTOS_MAXIMOS
         ) {
           httpClient.enviarCorreo(usuario.getCorreo());
-          return new Response(false, "Hay una sesión activa y ha excedido el numero maximo de intentos, hemos enviado un codigo de verificacion a su correo.", true);
+          return new Response(false, "Hay una sesión activa y ha excedido el numero maximo de intentos, hemos enviado un codigo de verificacion a su correo.")
+            .withTokenRestaurarSesion();
         }
 
         if (usuarioBD.isActivo()) {
@@ -105,8 +111,6 @@ public class Modelo {
           return new Response(false, "Ya hay una sesión activa");
         }
 
-        this.httpClient.enviarCorreo(usuario.getCorreo());
-
         return new Response(
             true,
             "Inicio de sesión exitoso",
@@ -126,18 +130,23 @@ public class Modelo {
 
         registro.setPassword1(HashAdapter.hashPassword(registro.getPassword1()));
         bd.registrarUsuario(registro);
-        return new Response(true, "Usuario registrado exitosamente");
+        httpClient.enviarCorreo(registro.getCorreo());
+        return new Response(true, "Usuario creado, le hemos enviado un codigo de verificacion a su correo, favor de colocarlo.");
     }
 
-    public Response validarToken(String token, String correo) {
+    public Response restaurarSession(String token, String correo) {
 
-      Response response = httpClient.validarToken(token, correo);
+      Response response = httpClient.restaurarSesion(token, correo);
       if (!response.isValid()) {
         return response;
       }
 
-      bd.cerrarSesion(correo);
       bd.reiniciarIntentos(correo);
+      return response;
+    }
+
+    public Response verificarUsuario(String token, String correo) {
+      Response response = httpClient.verificarCorreo(token, correo);
       return response;
     }
     
