@@ -4,7 +4,6 @@ import { sequelize } from './db/connection.js';
 import { ENV } from './utils/env.js';
 
 import EmailRouter from './routes/emails-routes.js';
-import UserRouter from './routes/users-routes.js';
 export class Server {
 
   constructor() {
@@ -14,7 +13,6 @@ export class Server {
 
     this.paths = {
       emails: '/api/emails',
-      users: '/api/users',
     }
 
     this.middlewares();
@@ -31,7 +29,6 @@ export class Server {
 
   routes() {
     this.app.use(this.paths.emails, EmailRouter);
-    this.app.use(this.paths.users, UserRouter);
   }
 
   async initializeDatabase() {
