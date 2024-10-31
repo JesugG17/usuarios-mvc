@@ -32,4 +32,8 @@ public class ModalToken extends JDialog {
   public String getToken() {
     return txtToken.getText();
   }
+
+  public void limpiar() {
+    txtToken.setText("");
+  }
 }

@@ -135,4 +135,17 @@ public class BaseDeDatosImplementation extends BaseDeDatos {
         }
         return resultado;
     }
+
+    @Override
+    public int verificarCorreo(String correo) {
+      int resultado = 0;
+      String sql = "UPDATE usuarios SET verificado = true WHERE correo = ?";
+      try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+          ps.setString(1, correo);
+          resultado = ps.executeUpdate();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+      return resultado;
+    }
 }

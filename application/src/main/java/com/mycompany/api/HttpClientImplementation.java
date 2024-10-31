@@ -43,7 +43,7 @@ public class HttpClientImplementation extends HttpClient {
   }
 
   @Override
-  public com.mycompany.models.Response restaurarSesion(String token, String correo) {
+  public com.mycompany.models.Response verificarToken(String token, String correo) {
     try {
       
       String jsonData = "{ \"email\": \"" + correo + "\", \"token\": \"" + token + "\" }";
@@ -51,7 +51,7 @@ public class HttpClientImplementation extends HttpClient {
       RequestBody body = RequestBody.create(jsonData, contentType);
 
       Request request = new Request.Builder()
-        .url(this.url + "/users/reset-session")
+        .url(this.url + "/emails/verify-token")
         .post(body)
         .build();
 
@@ -61,30 +61,7 @@ public class HttpClientImplementation extends HttpClient {
       return new com.mycompany.models.Response(apiResponse.ok, apiResponse.message);
     } catch (Exception e) {
       e.printStackTrace();
-      return new com.mycompany.models.Response(false, "Algo ha salido mal al enviar al restaurar la sesion");
-    }
-  }
-
-  @Override
-  public com.mycompany.models.Response verificarCorreo(String token, String correo) {
-    try {
-      
-      String jsonData = "{ \"email\": \"" + correo + "\", \"token\": \"" + token + "\" }";
-      MediaType contentType = MediaType.get("application/json");
-      RequestBody body = RequestBody.create(jsonData, contentType);
-
-      Request request = new Request.Builder()
-        .url(this.url + "/users/verify-user")
-        .post(body)
-        .build();
-
-      Response response = this.httpClient.newCall(request).execute();
-      ObjectMapper mapper = new ObjectMapper();
-      ApiResponse apiResponse = mapper.readValue(response.body().byteStream(), ApiResponse.class);
-      return new com.mycompany.models.Response(apiResponse.ok, apiResponse.message);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return new com.mycompany.models.Response(false, "Algo ha salido mal al enviar el token");
+      return new com.mycompany.models.Response(false, "Algo ha salido mal al verificar el token");
     }
   }
 

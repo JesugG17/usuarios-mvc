@@ -15,6 +15,8 @@ public abstract class BaseDeDatos {
 
     public abstract int iniciarSesion(String correo);
 
+    public abstract int verificarCorreo(String correo);
+
     public abstract int cerrarSesion(String correo);
 
     public abstract int reiniciarIntentos(String correo);

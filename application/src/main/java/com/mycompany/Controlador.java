@@ -93,24 +93,6 @@ public class Controlador implements ActionListener, WindowListener {
           vista.limpiarRegistro();
         }
 
-        // if (e.getSource() == vista.getBtnIngresarToken()) {
-
-
-        //   String correoUsuario = vista.getUsuario().getCorreo();
-        //   Response response = vista.modalRegistroAbierto()
-        //     ? modelo.verificarUsuario(vista.getToken(), correoUsuario)
-        //     : modelo.restaurarSession(vista.getToken(), correoUsuario);
-
-        //   vista.mostarMensaje(response.getMessage());
-
-        //   if (!response.isValid()) {
-        //     return;
-        //   }
-          
-        //   vista.cerrarModalToken();
-        //   return;
-        // }
-
         if (e.getSource() == vista.getBtnCerrarSesion()) {
             modelo.cerrarSesion(vista.getCorreoLogin());
             vista.mostrarPrincipal(false);

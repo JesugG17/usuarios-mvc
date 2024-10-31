@@ -166,10 +166,13 @@ public class Vista extends JFrame {
 
     public void cerrarModalTokenVerificarUsuario() {
       modalRegistrarUsuario.setVisible(false);
+      modalTokenRegistro.setVisible(false);
+      modalTokenRegistro.limpiar();
     }
 
     public void cerrarModalTokenRestaurarSesion() {
       modalTokenRestaurarSesion.setVisible(false);
+      modalTokenRestaurarSesion.limpiar();
     }
 
     public boolean modalRegistroAbierto() {

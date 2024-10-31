@@ -136,17 +136,23 @@ public class Modelo {
 
     public Response restaurarSession(String token, String correo) {
 
-      Response response = httpClient.restaurarSesion(token, correo);
+      Response response = httpClient.verificarToken(token, correo);
       if (!response.isValid()) {
         return response;
       }
 
+      bd.cerrarSesion(correo);
       bd.reiniciarIntentos(correo);
       return response;
     }
 
     public Response verificarUsuario(String token, String correo) {
-      Response response = httpClient.verificarCorreo(token, correo);
+      Response response = httpClient.verificarToken(token, correo);
+      if (!response.isValid()) {
+        return response;
+      }
+
+      bd.verificarCorreo(correo);
       return response;
     }
     

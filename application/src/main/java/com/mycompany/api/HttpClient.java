@@ -6,7 +6,6 @@ public abstract class HttpClient {
   
   public abstract boolean enviarCorreo(String correo);
 
-  public abstract Response restaurarSesion(String token, String correo);
-
-  public abstract Response verificarCorreo(String token, String correo);
+  public abstract Response verificarToken(String token, String correo); 
+  
 }
